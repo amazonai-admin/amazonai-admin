@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AmazonAI Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #5865F2;
+            --primary-light: #7289DA;
+            --success: #43B581;
+            --danger: #F04747;
+            --warning: #FAA61A;
+            --bg-dark: #0D1117;
+            --bg-card: #161B22;
+            --bg-input: #0D1117;
+            --border: #30363D;
+            --text: #F0F6FC;
+            --text-secondary: #8B949E;
+        }
+
+        html, body {
+            background: var(--bg-dark);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ══════════════ LOGIN ══════════════ */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #0D1117 0%, #161B22 100%);
+        }
+
+        .login-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 28px;
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .login-logo {
+            width: 56px;
+            height: 56px;
+            background: var(--primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+        }
+
+        .login-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .login-header p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .form-field {
+            margin-bottom: 16px;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-field input {
+            width: 100%;
+            padding: 12px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-field input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-field input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .btn-primary:active {
+            background: var(--primary-light);
+            transform: scale(0.98);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .btn-sm {
+            padding: 10px 16px;
+            font-size: 13px;
+        }
+
+        .login-error {
+            background: rgba(240, 71, 71, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 16px;
+            display: none;
+        }
+
+        /* ══════════════ APP LAYOUT ══════════════ */
+        .app {
+            display: none;
+            padding-bottom: 70px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .header-avatar {
+            width: 34px;
+            height: 34px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Content */
+        .content {
+            padding: 16px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header i {
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .card-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .card-body {
+            padding: 16px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            margin-bottom: 12px;
+        }
+
+        .stat-icon.purple { background: rgba(88, 101, 242, 0.15); color: var(--primary); }
+        .stat-icon.green { background: rgba(67, 181, 129, 0.15); color: var(--success); }
+        .stat-icon.orange { background: rgba(250, 166, 26, 0.15); color: var(--warning); }
+        .stat-icon.red { background: rgba(240, 71, 71, 0.15); color: var(--danger); }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* Control Buttons */
+        .control-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .control-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 20px 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .control-btn:active {
+            transform: scale(0.96);
+        }
+
+        .control-btn.start {
+            background: var(--success);
+            color: #fff;
+        }
+
+        .control-btn.stop {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .control-btn i {
+            font-size: 20px;
+        }
+
+        .control-btn span {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Status Badge */
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: var(--bg-input);
+            border-radius: 8px;
+            margin-bottom: 14px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .status-dot.running {
+            background: var(--success);
+            box-shadow: 0 0 8px var(--success);
+        }
+
+        .status-dot.stopped {
+            background: var(--danger);
+            box-shadow: 0 0 8px var(--danger);
+        }
+
+        .status-text {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* User List */
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-input);
+            border-radius: 8px;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .user-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .user-badge {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .user-badge.online {
+            background: rgba(67, 181, 129, 0.15);
+            color: var(--success);
+        }
+
+        .user-badge.offline {
+            background: rgba(139, 148, 158, 0.15);
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state i {
+            font-size: 32px;
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+
+        .empty-state p {
+            font-size: 13px;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 13px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        select.form-input {
+            cursor: pointer;
+        }
+
+        select.form-input option {
+            background: var(--bg-card);
+        }
+
+        /* License Item */
+        .license-item {
+            background: var(--bg-input);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .license-key {
+            font-family: 'Monaco', monospace;
+            font-size: 12px;
+            background: rgba(88, 101, 242, 0.15);
+            color: var(--primary);
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .license-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .license-info {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .license-badge {
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .license-badge.active {
+            background: rgba(67, 181, 129, 0.15);
+            color: var(--success);
+        }
+
+        .license-badge.expired {
+            background: rgba(240, 71, 71, 0.15);
+            color: var(--danger);
+        }
+
+        /* App Info */
+        .app-info-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .app-info-item {
+            background: var(--bg-input);
+            border-radius: 8px;
+            padding: 14px 10px;
+            text-align: center;
+        }
+
+        .app-info-item i {
+            color: var(--primary);
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .app-info-item h4 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .app-info-item p {
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Help Text */
+        .help-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .help-text code {
+            display: block;
+            background: var(--bg-input);
+            padding: 8px 10px;
+            border-radius: 6px;
+            margin: 8px 0;
+            font-size: 11px;
+            word-break: break-all;
+            color: var(--text);
+        }
+
+        /* Settings Item */
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px;
+            background: var(--bg-input);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .settings-item:active {
+            background: var(--border);
+        }
+
+        .settings-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .settings-icon {
+            width: 36px;
+            height: 36px;
+            background: rgba(88, 101, 242, 0.15);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .settings-text h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .settings-text p {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .settings-item i.fa-chevron-right {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0 12px;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item i {
+            font-size: 18px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 16px;
+            right: 16px;
+            padding: 14px 16px;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2000;
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success { background: var(--success); }
+        .toast.error { background: var(--danger); }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN -->
+    <div class="login-page" id="loginPage">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo"><i class="fas fa-robot"></i></div>
+                <h1>AmazonAI Admin</h1>
+                <p>Sign in to continue</p>
+            </div>
+            <div class="form-field">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter username">
+            </div>
+            <div class="form-field">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password">
+            </div>
+            <button class="btn btn-primary" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+            <div class="login-error" id="loginError">Invalid credentials</div>
+        </div>
+    </div>
+
+    <!-- APP -->
+    <div class="app" id="app">
+        <div class="header">
+            <h1 id="pageTitle">Dashboard</h1>
+            <div class="header-avatar">A</div>
+        </div>
+
+        <div class="content">
+            <!-- DASHBOARD -->
+            <div class="page active" id="page-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-icon purple"><i class="fas fa-users"></i></div>
+                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon green"><i class="fas fa-circle"></i></div>
+                        <div class="stat-value" id="activeUsers">0</div>
+                        <div class="stat-label">Online</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon orange"><i class="fas fa-box"></i></div>
+                        <div class="stat-value" id="totalOrders">0</div>
+                        <div class="stat-label">Orders</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon red"><i class="fas fa-key"></i></div>
+                        <div class="stat-value" id="activeLicenses">0</div>
+                        <div class="stat-label">Licenses</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-gamepad"></i>
+                        <h3>Remote Control</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="status-bar">
+                            <div class="status-dot" id="statusDot"></div>
+                            <span class="status-text" id="statusText">Loading...</span>
+                        </div>
+                        <div class="control-grid">
+                            <button class="control-btn start" onclick="sendCommand('start')">
+                                <i class="fas fa-play"></i>
+                                <span>START</span>
+                            </button>
+                            <button class="control-btn stop" onclick="sendCommand('stop')">
+                                <i class="fas fa-stop"></i>
+                                <span>STOP</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-users"></i>
+                        <h3>Recent Users</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="user-list" id="recentUsers">
+                            <div class="empty-state">
+                                <i class="fas fa-user-slash"></i>
+                                <p>No users yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USERS -->
+            <div class="page" id="page-users">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-users"></i>
+                        <h3>All Users</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="user-list" id="allUsersList">
+                            <div class="empty-state">
+                                <i class="fas fa-user-slash"></i>
+                                <p>No users yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LICENSES -->
+            <div class="page" id="page-licenses">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-plus"></i>
+                        <h3>Generate License</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>User Name</label>
+                            <input type="text" class="form-input" id="licenseUser" placeholder="Enter name">
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-input" id="licenseEmail" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label>Duration</label>
+                            <select class="form-input" id="licenseDuration">
+                                <option value="7">7 Days</option>
+                                <option value="30" selected>30 Days</option>
+                                <option value="90">90 Days</option>
+                                <option value="365">1 Year</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-success" onclick="generateLicense()">
+                            <i class="fas fa-key"></i> Generate
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-list"></i>
+                        <h3>All Licenses</h3>
+                    </div>
+                    <div class="card-body" id="licensesList">
+                        <div class="empty-state">
+                            <i class="fas fa-key"></i>
+                            <p>No licenses yet</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UPDATES -->
+            <div class="page" id="page-updates">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-link"></i>
+                        <h3>APK Update</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>APK Download URL</label>
+                            <input type="text" class="form-input" id="manualApkUrl" placeholder="Paste Google Drive link">
+                        </div>
+                        <div class="form-group">
+                            <label>Version</label>
+                            <input type="text" class="form-input" id="manualVersion" placeholder="v2.1">
+                        </div>
+                        <button class="btn btn-success btn-sm" onclick="saveManualApk()">
+                            <i class="fas fa-save"></i> Save URL
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-info-circle"></i>
+                        <h3>Current Version</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="app-info-row">
+                            <div class="app-info-item">
+                                <i class="fas fa-code-branch"></i>
+                                <h4 id="currentVersion">-</h4>
+                                <p>Version</p>
+                            </div>
+                            <div class="app-info-item">
+                                <i class="fas fa-calendar"></i>
+                                <h4 id="uploadDate">-</h4>
+                                <p>Date</p>
+                            </div>
+                            <div class="app-info-item">
+                                <i class="fas fa-download"></i>
+                                <h4 id="downloadCount">0</h4>
+                                <p>Downloads</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm" onclick="pushUpdate()">
+                            <i class="fas fa-paper-plane"></i> Push Update
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-question-circle"></i>
+                        <h3>How to use</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="help-text">
+                            <p>1. Upload APK to Google Drive</p>
+                            <p>2. Share → Anyone with link</p>
+                            <p>3. Copy link & convert:</p>
+                            <code>drive.google.com/uc?export=download&id=FILE_ID</code>
+                            <p>4. Paste above & click Save URL</p>
+                            <p>5. Click Push Update</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SETTINGS -->
+            <div class="page" id="page-settings">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-cog"></i>
+                        <h3>Settings</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="settings-item" onclick="refreshData()">
+                            <div class="settings-left">
+                                <div class="settings-icon"><i class="fas fa-sync-alt"></i></div>
+                                <div class="settings-text">
+                                    <h4>Refresh Data</h4>
+                                    <p>Reload all information</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                        <div class="settings-item" onclick="logout()">
+                            <div class="settings-left">
+                                <div class="settings-icon"><i class="fas fa-sign-out-alt"></i></div>
+                                <div class="settings-text">
+                                    <h4>Logout</h4>
+                                    <p>Sign out from admin</p>
+                                </div>
+                            </div>
+                            <i class="fas fa-chevron-right"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <p style="font-size: 12px; color: var(--text-secondary); text-align: center;">
+                            AmazonAI Admin v2.0<br>
+                            © 2026 All rights reserved
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showPage('dashboard')">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="showPage('users')">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </div>
+            <div class="nav-item" onclick="showPage('licenses')">
+                <i class="fas fa-key"></i>
+                <span>License</span>
+            </div>
+            <div class="nav-item" onclick="showPage('updates')">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <span>Update</span>
+            </div>
+            <div class="nav-item" onclick="showPage('settings')">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastText"></span>
+    </div>
+
+    <!-- FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMfFNoQ4UZNCJwmePNpvoULnv65vr2LGs",
+            authDomain: "ai-app-ed50c.firebaseapp.com",
+            databaseURL: "https://ai-app-ed50c-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "ai-app-ed50c",
+            storageBucket: "ai-app-ed50c.firebasestorage.app"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        const ADMIN_USER = "Admin";
+        const ADMIN_PASS = "Harmeet@123";
+
+        // Login
+        function login() {
+            const u = document.getElementById('username').value;
+            const p = document.getElementById('password').value;
+            if (u === ADMIN_USER && p === ADMIN_PASS) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                localStorage.setItem('logged', 'true');
+                loadData();
+                listen();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => document.getElementById('loginError').style.display = 'none', 2000);
+            }
+        }
+
+        if (localStorage.getItem('logged') === 'true') {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            loadData();
+            listen();
+        }
+
+        function logout() {
+            localStorage.removeItem('logged');
+            location.reload();
+        }
+
+        // Pages
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            event.currentTarget.classList.add('active');
+            const titles = {dashboard:'Dashboard', users:'Users', licenses:'Licenses', updates:'Updates', settings:'Settings'};
+            document.getElementById('pageTitle').textContent = titles[page];
+        }
+
+        // Toast
+        function toast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            document.getElementById('toastText').textContent = msg;
+            t.className = 'toast ' + type + ' show';
+            setTimeout(() => t.classList.remove('show'), 2500);
+        }
+
+        // Load Data
+        function loadData() {
+            db.ref('stats').once('value', s => {
+                const d = s.val() || {};
+                document.getElementById('totalUsers').textContent = d.totalUsers || 0;
+                document.getElementById('activeUsers').textContent = d.activeUsers || 0;
+                document.getElementById('totalOrders').textContent = d.totalOrders || 0;
+                document.getElementById('activeLicenses').textContent = d.activeLicenses || 0;
+            });
+            db.ref('control/status').once('value', s => updateStatus(s.val() || 'stopped'));
+            loadUsers();
+            loadLicenses();
+            loadAppInfo();
+        }
+
+        function listen() {
+            db.ref('stats').on('value', s => {
+                const d = s.val() || {};
+                document.getElementById('totalUsers').textContent = d.totalUsers || 0;
+                document.getElementById('activeUsers').textContent = d.activeUsers || 0;
+                document.getElementById('totalOrders').textContent = d.totalOrders || 0;
+                document.getElementById('activeLicenses').textContent = d.activeLicenses || 0;
+            });
+            db.ref('control/status').on('value', s => updateStatus(s.val() || 'stopped'));
+        }
+
+        function updateStatus(status) {
+            const dot = document.getElementById('statusDot');
+            const txt = document.getElementById('statusText');
+            if (status === 'running') {
+                dot.className = 'status-dot running';
+                txt.textContent = 'All Systems Running';
+            } else {
+                dot.className = 'status-dot stopped';
+                txt.textContent = 'All Systems Stopped';
+            }
+        }
+
+        function sendCommand(cmd) {
+            db.ref('control').update({
+                status: cmd === 'start' ? 'running' : 'stopped',
+                command: cmd,
+                timestamp: Date.now()
+            }).then(() => toast(cmd === 'start' ? '🚀 Started!' : '🛑 Stopped!'));
+        }
+
+        function loadUsers() {
+            db.ref('users').once('value', s => {
+                const users = s.val() || {};
+                let html = '';
+                Object.keys(users).forEach(k => {
+                    const u = users[k];
+                    const init = (u.name || 'U')[0].toUpperCase();
+                    const badge = u.online ? '<span class="user-badge online">Online</span>' : '<span class="user-badge offline">Offline</span>';
+                    html += `<div class="user-item">
+                        <div class="user-avatar">${init}</div>
+                        <div class="user-info">
+                            <div class="user-name">${u.name || 'Unknown'}</div>
+                            <div class="user-meta">${u.device || '-'} • ${u.orders || 0} orders</div>
+                        </div>
+                        ${badge}
+                    </div>`;
+                });
+                if (!html) html = '<div class="empty-state"><i class="fas fa-user-slash"></i><p>No users yet</p></div>';
+                document.getElementById('recentUsers').innerHTML = html;
+                document.getElementById('allUsersList').innerHTML = html;
+            });
+        }
+
+        function loadLicenses() {
+            db.ref('licenses').once('value', s => {
+                const lic = s.val() || {};
+                let html = '';
+                Object.keys(lic).forEach(k => {
+                    const l = lic[k];
+                    const active = new Date(l.expiry) > new Date();
+                    const badge = active ? '<span class="license-badge active">Active</span>' : '<span class="license-badge expired">Expired</span>';
+                    html += `<div class="license-item">
+                        <div class="license-key">${k}</div>
+                        <div class="license-meta">
+                            <span class="license-info">${l.user || '-'} • ${l.expiry || '-'}</span>
+                            ${badge}
+                        </div>
+                    </div>`;
+                });
+                if (!html) html = '<div class="empty-state"><i class="fas fa-key"></i><p>No licenses yet</p></div>';
+                document.getElementById('licensesList').innerHTML = html;
+            });
+        }
+
+        function generateLicense() {
+            const user = document.getElementById('licenseUser').value;
+            const email = document.getElementById('licenseEmail').value;
+            const days = parseInt(document.getElementById('licenseDuration').value);
+            if (!user || !email) return toast('Fill all fields', 'error');
+            
+            const key = 'AMAI-' + rnd(4) + '-' + rnd(4) + '-' + rnd(4);
+            const created = new Date().toISOString().split('T')[0];
+            const expiry = new Date(Date.now() + days * 86400000).toISOString().split('T')[0];
+            
+            db.ref('licenses/' + key).set({user, email, created, expiry, active: true}).then(() => {
+                toast('✅ License: ' + key);
+                document.getElementById('licenseUser').value = '';
+                document.getElementById('licenseEmail').value = '';
+                loadLicenses();
+                db.ref('stats/activeLicenses').transaction(c => (c || 0) + 1);
+            });
+        }
+
+        function rnd(n) {
+            const c = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let r = '';
+            for (let i = 0; i < n; i++) r += c[Math.floor(Math.random() * c.length)];
+            return r;
+        }
+
+        function loadAppInfo() {
+            db.ref('app').once('value', s => {
+                const a = s.val() || {};
+                document.getElementById('currentVersion').textContent = a.version || '-';
+                document.getElementById('uploadDate').textContent = a.uploadDate || '-';
+                document.getElementById('downloadCount').textContent = a.downloads || 0;
+            });
+        }
+
+        function saveManualApk() {
+            const url = document.getElementById('manualApkUrl').value.trim();
+            const ver = document.getElementById('manualVersion').value.trim();
+            if (!url) return toast('Enter URL', 'error');
+            
+            db.ref('app').update({
+                apkUrl: url,
+                version: ver || 'v2.0',
+                uploadDate: new Date().toISOString().split('T')[0],
+                downloads: 0
+            }).then(() => {
+                toast('✅ URL saved!');
+                document.getElementById('manualApkUrl').value = '';
+                document.getElementById('manualVersion').value = '';
+                loadAppInfo();
+            });
+        }
+
+        function pushUpdate() {
+            db.ref('control').update({
+                updateAvailable: true,
+                updateTimestamp: Date.now()
+            }).then(() => toast('🚀 Update pushed!'));
+        }
+
+        function refreshData() {
+            loadData();
+            toast('Refreshed!');
+        }
+
+        // Init
+        db.ref('stats').once('value', s => {
+            if (!s.exists()) db.ref('stats').set({totalUsers:0, activeUsers:0, totalOrders:0, activeLicenses:0});
+        });
+        db.ref('control').once('value', s => {
+            if (!s.exists()) db.ref('control').set({status:'stopped', command:'stop', timestamp:Date.now()});
+        });
+
+        document.getElementById('password').addEventListener('keypress', e => { if (e.key === 'Enter') login(); });
+    </script>
+</body>
+</html>

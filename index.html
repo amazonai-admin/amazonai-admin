@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AmazonAI Admin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --dark: #0f172a;
+            --darker: #020617;
+            --card: rgba(30, 41, 59, 0.8);
+            --border: rgba(148, 163, 184, 0.1);
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            min-height: 100vh;
+            color: var(--text);
+            padding-bottom: 80px;
+        }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* LOGIN PAGE */
+        /* ══════════════════════════════════════════════════════════════ */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), #22d3ee);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 32px;
+            color: #fff;
+        }
+
+        .login-logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .login-logo p {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 15px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .login-error {
+            color: var(--danger);
+            text-align: center;
+            margin-top: 15px;
+            font-size: 13px;
+            display: none;
+        }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* MAIN APP */
+        /* ══════════════════════════════════════════════════════════════ */
+        .app {
+            display: none;
+        }
+
+        /* Top Header */
+        .top-header {
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            padding: 18px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--primary), #22d3ee);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Page Content */
+        .page-content {
+            padding: 20px;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* BOTTOM NAVIGATION - MOBILE FRIENDLY */
+        /* ══════════════════════════════════════════════════════════════ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--card);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 5px 15px;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-muted);
+            text-decoration: none;
+            min-width: 60px;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        .nav-item i {
+            font-size: 20px;
+        }
+
+        .nav-item span {
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* STATS CARDS */
+        /* ══════════════════════════════════════════════════════════════ */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .stat-card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .stat-card-icon.purple { background: rgba(99,102,241,0.2); color: var(--primary); }
+        .stat-card-icon.green { background: rgba(16,185,129,0.2); color: var(--success); }
+        .stat-card-icon.cyan { background: rgba(34,211,238,0.2); color: #22d3ee; }
+        .stat-card-icon.orange { background: rgba(245,158,11,0.2); color: var(--warning); }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* CONTROL PANEL */
+        /* ══════════════════════════════════════════════════════════════ */
+        .section-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .status-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-dot.running { background: var(--success); box-shadow: 0 0 10px var(--success); }
+        .status-dot.stopped { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .control-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .control-btn {
+            padding: 25px 15px;
+            border: none;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.2s;
+        }
+
+        .control-btn:active {
+            transform: scale(0.95);
+        }
+
+        .control-btn i {
+            font-size: 28px;
+        }
+
+        .control-btn.start {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: #fff;
+        }
+
+        .control-btn.stop {
+            background: linear-gradient(135deg, var(--danger), #dc2626);
+            color: #fff;
+        }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* USER LIST */
+        /* ══════════════════════════════════════════════════════════════ */
+        .user-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            margin-bottom: 10px;
+        }
+
+        .user-item-avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary), #22d3ee);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .user-item-info {
+            flex: 1;
+        }
+
+        .user-item-name {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 3px;
+        }
+
+        .user-item-device {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .user-item-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .user-item-status.online {
+            background: rgba(16,185,129,0.2);
+            color: var(--success);
+        }
+
+        .user-item-status.offline {
+            background: rgba(239,68,68,0.2);
+            color: var(--danger);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* LICENSE FORM */
+        /* ══════════════════════════════════════════════════════════════ */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(0,0,0,0.3);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        select.form-input {
+            cursor: pointer;
+        }
+
+        select.form-input option {
+            background: var(--dark);
+        }
+
+        .btn {
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: #fff;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #059669);
+            color: #fff;
+        }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* LICENSE LIST */
+        /* ══════════════════════════════════════════════════════════════ */
+        .license-item {
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .license-key {
+            font-family: monospace;
+            font-size: 13px;
+            background: rgba(99,102,241,0.2);
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            word-break: break-all;
+        }
+
+        .license-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .license-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .license-status.active {
+            background: rgba(16,185,129,0.2);
+            color: var(--success);
+        }
+
+        .license-status.expired {
+            background: rgba(239,68,68,0.2);
+            color: var(--danger);
+        }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* UPLOAD SECTION */
+        /* ══════════════════════════════════════════════════════════════ */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 14px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .upload-area:active {
+            border-color: var(--primary);
+            background: rgba(99,102,241,0.1);
+        }
+
+        .upload-area i {
+            font-size: 45px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .upload-area h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .upload-area p {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #22d3ee);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .app-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .app-info-item {
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+            padding: 15px 10px;
+            text-align: center;
+        }
+
+        .app-info-item i {
+            color: var(--primary);
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+
+        .app-info-item h4 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .app-info-item p {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* NOTIFICATION */
+        /* ══════════════════════════════════════════════════════════════ */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            z-index: 2000;
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification.success { background: linear-gradient(135deg, var(--success), #059669); }
+        .notification.error { background: linear-gradient(135deg, var(--danger), #dc2626); }
+
+        /* ══════════════════════════════════════════════════════════════ */
+        /* SETTINGS */
+        /* ══════════════════════════════════════════════════════════════ */
+        .settings-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 12px;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        .settings-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .settings-item-left i {
+            width: 40px;
+            height: 40px;
+            background: rgba(99,102,241,0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .settings-item-title {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .settings-item-subtitle {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .settings-item i.fa-chevron-right {
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- LOGIN PAGE -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="login-container" id="loginPage">
+        <div class="login-box">
+            <div class="login-logo">
+                <div class="logo-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h1>AmazonAI Admin</h1>
+                <p>Login to your dashboard</p>
+            </div>
+            <div class="input-group">
+                <label>Username</label>
+                <input type="text" id="username" placeholder="Enter username">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="Enter password">
+            </div>
+            <button class="login-btn" onclick="login()">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+            <p class="login-error" id="loginError">Invalid username or password</p>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <!-- MAIN APP -->
+    <!-- ══════════════════════════════════════════════════════════════ -->
+    <div class="app" id="app">
+        <!-- Top Header -->
+        <div class="top-header">
+            <div class="header-content">
+                <h1 class="header-title" id="pageTitle">Dashboard</h1>
+                <div class="header-user">
+                    <div class="user-avatar">A</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- DASHBOARD PAGE -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div class="page active" id="page-dashboard">
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-icon purple"><i class="fas fa-users"></i></div>
+                        <div class="stat-value" id="totalUsers">0</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon green"><i class="fas fa-user-check"></i></div>
+                        <div class="stat-value" id="activeUsers">0</div>
+                        <div class="stat-label">Active Now</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon cyan"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="stat-value" id="totalOrders">0</div>
+                        <div class="stat-label">Total Orders</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-icon orange"><i class="fas fa-key"></i></div>
+                        <div class="stat-value" id="activeLicenses">0</div>
+                        <div class="stat-label">Licenses</div>
+                    </div>
+                </div>
+
+                <!-- Remote Control -->
+                <div class="section-card">
+                    <div class="section-title">
+                        <i class="fas fa-gamepad"></i> Remote Control
+                    </div>
+                    <div class="status-bar">
+                        <div class="status-dot" id="statusDot"></div>
+                        <span id="statusText">Loading...</span>
+                    </div>
+                    <div class="control-buttons">
+                        <button class="control-btn start" onclick="sendCommand('start')">
+                            <i class="fas fa-play"></i>
+                            START ALL
+                        </button>
+                        <button class="control-btn stop" onclick="sendCommand('stop')">
+                            <i class="fas fa-stop"></i>
+                            STOP ALL
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Users -->
+                <div class="section-card">
+                    <div class="section-title">
+                        <i class="fas fa-users"></i> Recent Users
+                    </div>
+                    <div id="recentUsers">
+                        <div class="empty-state">
+                            <i class="fas fa-user-slash"></i>
+                            <p>No users found</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- USERS PAGE -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div class="page" id="page-users">
+                <div class="section-card">
+                    <div class="section-title">
+                        <i class="fas fa-users"></i> All Users
+                    </div>
+                    <div id="allUsersList">
+                        <div class="empty-state">
+                            <i class="fas fa-user-slash"></i>
+                            <p>No users found</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- LICENSES PAGE -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div class="page" id="page-licenses">
+                <div class="section-card">
+                    <div class="section-title">
+                        <i class="fas fa-plus-circle"></i> Generate License
+                    </div>
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" class="form-input" id="licenseUser" placeholder="Enter user name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" class="form-input" id="licenseEmail" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration</label>
+                        <select class="form-input" id="licenseDuration">
+                            <option value="7">7 Days</option>
+                            <option value="30" selected>30 Days</option>
+                            <option value="90">90 Days</option>
+                            <option value="365">1 Year</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-success" onclick="generateLicense()">
+                        <i class="fas fa-key"></i> Generate License
+                    </button>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-title">
+                        <i class="fas fa-key"></i> All Licenses
+                    </div>
+                    <div id="licensesList">
+                        <div class="empty-state">
+                            <i class="fas fa-key"></i>
+                            <p>No licenses found</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- UPDATES PAGE -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div class="page" id="page-updates">
+                <div class="section-card">
+                    <div class="section-title">
+                        <i class="fas fa-upload"></i> Upload APK
+                    </div>
+                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3>Tap to upload APK</h3>
+                        <p>Select your APK file</p>
+                    </div>
+                    <input type="file" id="fileInput" accept=".apk" onchange="handleFileSelect(event)">
+                    <div class="progress-bar" id="progressBar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-title">
+                        <i class="fas fa-info-circle"></i> Current Version
+                    </div>
+                    <div class="app-info-grid">
+                        <div class="app-info-item">
+                            <i class="fas fa-code-branch"></i>
+                            <h4 id="currentVersion">v2.0</h4>
+                            <p>Version</p>
+                        </div>
+                        <div class="app-info-item">
+                            <i class="fas fa-calendar"></i>
+                            <h4 id="uploadDate">-</h4>
+                            <p>Date</p>
+                        </div>
+                        <div class="app-info-item">
+                            <i class="fas fa-download"></i>
+                            <h4 id="downloadCount">0</h4>
+                            <p>Downloads</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="pushUpdate()">
+                        <i class="fas fa-paper-plane"></i> Push Update to All
+                    </button>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <!-- SETTINGS PAGE -->
+            <!-- ══════════════════════════════════════════════════════════════ -->
+            <div class="page" id="page-settings">
+                <div class="section-card">
+                    <div class="section-title">
+                        <i class="fas fa-cog"></i> Settings
+                    </div>
+                    
+                    <div class="settings-item" onclick="refreshData()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-sync-alt"></i>
+                            <div>
+                                <div class="settings-item-title">Refresh Data</div>
+                                <div class="settings-item-subtitle">Reload all data</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+
+                    <div class="settings-item" onclick="logout()">
+                        <div class="settings-item-left">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <div>
+                                <div class="settings-item-title">Logout</div>
+                                <div class="settings-item-subtitle">Sign out from admin</div>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                </div>
+
+                <div class="section-card">
+                    <div class="section-title">
+                        <i class="fas fa-info-circle"></i> About
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 13px; line-height: 1.6;">
+                        AmazonAI Admin Panel v2.0<br>
+                        Built with ❤️ for remote control and management.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- BOTTOM NAVIGATION -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showPage('dashboard')">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item" onclick="showPage('users')">
+                <i class="fas fa-users"></i>
+                <span>Users</span>
+            </div>
+            <div class="nav-item" onclick="showPage('licenses')">
+                <i class="fas fa-key"></i>
+                <span>License</span>
+            </div>
+            <div class="nav-item" onclick="showPage('updates')">
+                <i class="fas fa-upload"></i>
+                <span>Updates</span>
+            </div>
+            <div class="nav-item" onclick="showPage('settings')">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText"></span>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyDMfFNoQ4UZNCJwmePNpvoULnv65vr2LGs",
+            authDomain: "ai-app-ed50c.firebaseapp.com",
+            databaseURL: "https://ai-app-ed50c-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "ai-app-ed50c",
+            storageBucket: "ai-app-ed50c.firebasestorage.app",
+            messagingSenderId: "72232285112",
+            appId: "1:72232285112:android:2194cd012160769ec0d54d"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const storage = firebase.storage();
+
+        // Admin credentials
+        const ADMIN_USERNAME = "Admin";
+        const ADMIN_PASSWORD = "Harmeet@123";
+
+        // Login
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                localStorage.setItem('isLoggedIn', 'true');
+                loadData();
+                listenRealtime();
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                setTimeout(() => document.getElementById('loginError').style.display = 'none', 3000);
+            }
+        }
+
+        // Check login
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('app').style.display = 'block';
+            loadData();
+            listenRealtime();
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            location.reload();
+        }
+
+        // Show page
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            const titles = { dashboard: 'Dashboard', users: 'Users', licenses: 'Licenses', updates: 'Updates', settings: 'Settings' };
+            document.getElementById('pageTitle').textContent = titles[page];
+        }
+
+        // Notification
+        function showNotification(message, type = 'success') {
+            const notif = document.getElementById('notification');
+            document.getElementById('notificationText').textContent = message;
+            notif.className = 'notification ' + type + ' show';
+            setTimeout(() => notif.classList.remove('show'), 3000);
+        }
+
+        // Load data
+        function loadData() {
+            database.ref('stats').once('value', snap => {
+                const d = snap.val() || {};
+                document.getElementById('totalUsers').textContent = d.totalUsers || 0;
+                document.getElementById('activeUsers').textContent = d.activeUsers || 0;
+                document.getElementById('totalOrders').textContent = d.totalOrders || 0;
+                document.getElementById('activeLicenses').textContent = d.activeLicenses || 0;
+            });
+
+            database.ref('control/status').once('value', snap => {
+                updateStatus(snap.val() || 'stopped');
+            });
+
+            loadUsers();
+            loadLicenses();
+            loadAppInfo();
+        }
+
+        // Realtime
+        function listenRealtime() {
+            database.ref('control/status').on('value', snap => updateStatus(snap.val() || 'stopped'));
+            database.ref('stats').on('value', snap => {
+                const d = snap.val() || {};
+                document.getElementById('totalUsers').textContent = d.totalUsers || 0;
+                document.getElementById('activeUsers').textContent = d.activeUsers || 0;
+                document.getElementById('totalOrders').textContent = d.totalOrders || 0;
+                document.getElementById('activeLicenses').textContent = d.activeLicenses || 0;
+            });
+        }
+
+        // Update status
+        function updateStatus(status) {
+            const dot = document.getElementById('statusDot');
+            const text = document.getElementById('statusText');
+            if (status === 'running') {
+                dot.className = 'status-dot running';
+                text.textContent = 'All Systems Running';
+            } else {
+                dot.className = 'status-dot stopped';
+                text.textContent = 'All Systems Stopped';
+            }
+        }
+
+        // Send command
+        function sendCommand(cmd) {
+            database.ref('control').update({
+                status: cmd === 'start' ? 'running' : 'stopped',
+                command: cmd,
+                timestamp: Date.now()
+            }).then(() => {
+                showNotification(cmd === 'start' ? '🚀 START sent!' : '🛑 STOP sent!');
+            });
+        }
+
+        // Load users
+        function loadUsers() {
+            database.ref('users').once('value', snap => {
+                const users = snap.val() || {};
+                let html = '';
+                Object.keys(users).forEach(key => {
+                    const u = users[key];
+                    const initial = (u.name || 'U')[0].toUpperCase();
+                    const status = u.online ? '<span class="user-item-status online">Online</span>' : '<span class="user-item-status offline">Offline</span>';
+                    html += `
+                        <div class="user-item">
+                            <div class="user-item-avatar">${initial}</div>
+                            <div class="user-item-info">
+                                <div class="user-item-name">${u.name || 'Unknown'}</div>
+                                <div class="user-item-device">${u.device || '-'} • ${u.orders || 0} orders</div>
+                            </div>
+                            ${status}
+                        </div>
+                    `;
+                });
+                if (!html) html = '<div class="empty-state"><i class="fas fa-user-slash"></i><p>No users found</p></div>';
+                document.getElementById('recentUsers').innerHTML = html;
+                document.getElementById('allUsersList').innerHTML = html;
+            });
+        }
+
+        // Load licenses
+        function loadLicenses() {
+            database.ref('licenses').once('value', snap => {
+                const licenses = snap.val() || {};
+                let html = '';
+                Object.keys(licenses).forEach(key => {
+                    const l = licenses[key];
+                    const isActive = new Date(l.expiry) > new Date();
+                    const status = isActive ? '<span class="license-status active">Active</span>' : '<span class="license-status expired">Expired</span>';
+                    html += `
+                        <div class="license-item">
+                            <div class="license-key">${key}</div>
+                            <div class="license-details">
+                                <span>${l.user || '-'} • ${l.expiry || '-'}</span>
+                                ${status}
+                            </div>
+                        </div>
+                    `;
+                });
+                if (!html) html = '<div class="empty-state"><i class="fas fa-key"></i><p>No licenses found</p></div>';
+                document.getElementById('licensesList').innerHTML = html;
+            });
+        }
+
+        // Generate license
+        function generateLicense() {
+            const user = document.getElementById('licenseUser').value;
+            const email = document.getElementById('licenseEmail').value;
+            const duration = parseInt(document.getElementById('licenseDuration').value);
+
+            if (!user || !email) {
+                showNotification('Please fill all fields', 'error');
+                return;
+            }
+
+            const key = 'AMAI-' + rand(4) + '-' + rand(4) + '-' + rand(4);
+            const created = new Date().toISOString().split('T')[0];
+            const expiry = new Date(Date.now() + duration * 86400000).toISOString().split('T')[0];
+
+            database.ref('licenses/' + key).set({ user, email, created, expiry, active: true }).then(() => {
+                showNotification('✅ License: ' + key);
+                document.getElementById('licenseUser').value = '';
+                document.getElementById('licenseEmail').value = '';
+                loadLicenses();
+                database.ref('stats/activeLicenses').transaction(c => (c || 0) + 1);
+            });
+        }
+
+        function rand(len) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let r = '';
+            for (let i = 0; i < len; i++) r += chars[Math.floor(Math.random() * chars.length)];
+            return r;
+        }
+
+        // File upload
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (!file || !file.name.endsWith('.apk')) {
+                showNotification('Select APK file', 'error');
+                return;
+            }
+
+            const bar = document.getElementById('progressBar');
+            const fill = document.getElementById('progressFill');
+            bar.style.display = 'block';
+
+            const ref = storage.ref('apk/' + file.name);
+            const task = ref.put(file);
+
+            task.on('state_changed',
+                snap => {
+                    const p = (snap.bytesTransferred / snap.totalBytes) * 100;
+                    fill.style.width = p + '%';
+                },
+                err => {
+                    showNotification('Upload failed', 'error');
+                    bar.style.display = 'none';
+                },
+                () => {
+                    task.snapshot.ref.getDownloadURL().then(url => {
+                        database.ref('app').update({
+                            version: 'v' + (Math.random() * 3 + 2).toFixed(1),
+                            apkUrl: url,
+                            uploadDate: new Date().toISOString().split('T')[0],
+                            fileName: file.name
+                        }).then(() => {
+                            showNotification('✅ APK uploaded!');
+                            bar.style.display = 'none';
+                            loadAppInfo();
+                        });
+                    });
+                }
+            );
+        }
+
+        // Load app info
+        function loadAppInfo() {
+            database.ref('app').once('value', snap => {
+                const a = snap.val() || {};
+                document.getElementById('currentVersion').textContent = a.version || 'v2.0';
+                document.getElementById('uploadDate').textContent = a.uploadDate || '-';
+                document.getElementById('downloadCount').textContent = a.downloads || 0;
+            });
+        }
+
+        // Push update
+        function pushUpdate() {
+            database.ref('control').update({
+                updateAvailable: true,
+                updateTimestamp: Date.now()
+            }).then(() => {
+                showNotification('🚀 Update pushed to all!');
+            });
+        }
+
+        // Refresh
+        function refreshData() {
+            loadData();
+            showNotification('Data refreshed!');
+        }
+
+        // Init
+        database.ref('stats').once('value', snap => {
+            if (!snap.exists()) {
+                database.ref('stats').set({ totalUsers: 0, activeUsers: 0, totalOrders: 0, activeLicenses: 0 });
+            }
+        });
+
+        database.ref('control').once('value', snap => {
+            if (!snap.exists()) {
+                database.ref('control').set({ status: 'stopped', command: 'stop', timestamp: Date.now() });
+            }
+        });
+
+        // Enter key login
+        document.getElementById('password').addEventListener('keypress', e => {
+            if (e.key === 'Enter') login();
+        });
+    </script>
+</body>
+</html>
